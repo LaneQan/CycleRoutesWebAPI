@@ -208,3 +208,4 @@ project.lock.json
 *.Specs_*.html
 
 .vscode/
+CycleRoutesCore.WebAPI/Properties/PublishProfiles/
