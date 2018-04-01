@@ -4,7 +4,7 @@ using CycleRoutesCore.WebAPI.Auth;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace CycleRoutesCore.WebAPI.Controllers
 {
@@ -13,17 +13,17 @@ namespace CycleRoutesCore.WebAPI.Controllers
     [Route("api/[controller]")]
     public class RoutesController : Controller
     {
-        private readonly ICycleRouteRepository _routeRepository;
+        private readonly IRouteRepository _routeRepository;
         private readonly IHttpContextAccessor _context;
 
-        public RoutesController(ICycleRouteRepository routeRepository, IHttpContextAccessor context)
+        public RoutesController(IRouteRepository routeRepository, IHttpContextAccessor context)
         {
             _routeRepository = routeRepository;
             _context = context;
         }
 
         [HttpGet]
-        public IQueryable<Route> GetAll()
+        public List<Route> GetAll()
         {
             AuthIdentity user = _context.HttpContext.User.Identity as AuthIdentity;
 

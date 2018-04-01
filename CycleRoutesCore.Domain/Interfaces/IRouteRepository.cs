@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace CycleRoutesCore.Domain.Interfaces
 {
-    public interface ICycleRouteRepository : IDisposable
+    public interface IRouteRepository : IDisposable
     {
         Task CreateRoute(Models.Route route);
 
@@ -12,7 +12,7 @@ namespace CycleRoutesCore.Domain.Interfaces
 
         Task DeleteRoute(Models.Route route);
 
-        IQueryable<Models.Route> GetAllRoutes();
+        List<Models.Route> GetAllRoutes();
 
         Models.Route GetRoute(int id);
     }

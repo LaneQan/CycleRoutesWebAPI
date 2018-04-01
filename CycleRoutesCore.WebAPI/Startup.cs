@@ -41,7 +41,7 @@ namespace CycleRoutesCore.WebAPI
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IAuthorizationHandler, JWTAuthorizeHandler>();
-            services.AddScoped<ICycleRouteRepository, RouteRepository>();
+            services.AddScoped<IRouteRepository, RouteRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddDbContext<CycleRoutesContext>(options =>

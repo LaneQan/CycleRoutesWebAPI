@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace CycleRoutesCore.WebAPI
 {
@@ -13,6 +14,11 @@ namespace CycleRoutesCore.WebAPI
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .ConfigureAppConfiguration((hostContext, config) =>
+                {
+                    config.Sources.Clear();
+                    config.AddJsonFile("appsettings.json", optional: true);
+                })
                 .Build();
     }
 }

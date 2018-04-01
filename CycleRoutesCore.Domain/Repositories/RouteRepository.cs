@@ -1,12 +1,13 @@
 ﻿using CycleRoutesCore.Domain.EFCore;
 using CycleRoutesCore.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace CycleRoutesCore.Domain.Repositories
 {
-    public class RouteRepository : ICycleRouteRepository
+    public class RouteRepository : IRouteRepository
     {
         private bool disposed = false;
         private CycleRoutesContext _db;
@@ -36,9 +37,9 @@ namespace CycleRoutesCore.Domain.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public IQueryable<Models.Route> GetAllRoutes()
+        public List<Models.Route> GetAllRoutes()
         {
-            return _db.Routes.AsQueryable();
+            return _db.Routes.ToList();
         }
 
         public Models.Route GetRoute(int id)

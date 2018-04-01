@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using System;
+using System.Collections.Generic;
 
 namespace CycleRoutesCore.Domain.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Reset : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,8 +15,11 @@ namespace CycleRoutesCore.Domain.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Complexity = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true),
+                    Image = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
+                    Length = table.Column<double>(nullable: false),
                     Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
