@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 
 namespace CycleRoutesCore.Domain.Interfaces
 {
-    public interface IRouteRepository : IDisposable
+    public interface IRouteRepository : IRepository<Models.Route>
     {
-        Task CreateRoute(Models.Route route);
-
         Task UpdateRoute(Models.Route route);
 
         Task DeleteRoute(Models.Route route);

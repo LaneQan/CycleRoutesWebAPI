@@ -1,14 +1,12 @@
-﻿using CycleRoutesCore.Domain.Models;
+﻿using System;
+using CycleRoutesCore.Domain.Models;
 using System.Threading.Tasks;
 
 namespace CycleRoutesCore.Domain.Interfaces
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IUserRepository
     {
-        Task<User> Get(int id);
-
-        Task<User> GetUserByCredentials(string email, string password);
-
-        Task<User> GetUserByEmail(string email);
+        Task<User> GetUserByCredentials(string login, string email, string password);
+        Task<User> Create(User user);
     }
 }

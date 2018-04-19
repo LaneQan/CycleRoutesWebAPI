@@ -1,4 +1,6 @@
-﻿using CycleRoutesCore.Domain.Enums;
+﻿using System.Linq;
+using CycleRoutesCore.Domain.Enums;
+using CycleRoutesCore.Domain.Helpers;
 using CycleRoutesCore.Domain.Models;
 
 namespace CycleRoutesCore.Domain.EFCore
@@ -63,6 +65,15 @@ namespace CycleRoutesCore.Domain.EFCore
                     LineType = LineType.Direct,
                     Length = 160
                 });
+            if (!context.Users.Any())
+            {
+                context.Users.Add(new User()
+                {
+                    Login = "admin",
+                    Password = PasswordHasher.HashingPassword("admin"),
+                    Email = "admin@admin.admin"
+                });
+            }
             context.SaveChanges();
         }
     }

@@ -17,7 +17,7 @@ namespace CycleRoutesCore.Domain.Repositories
             _db = db;
         }
 
-        public async Task CreateRoute(Models.Route route)
+        public async Task Create(Models.Route route)
         {
             _db.Routes.Add(route);
             await _db.SaveChangesAsync();
