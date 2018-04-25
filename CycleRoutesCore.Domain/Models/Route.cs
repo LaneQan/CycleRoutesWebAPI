@@ -1,4 +1,5 @@
 ﻿using CycleRoutesCore.Domain.Enums;
+using System.Collections.Generic;
 
 namespace CycleRoutesCore.Domain.Models
 {
@@ -13,5 +14,7 @@ namespace CycleRoutesCore.Domain.Models
         public string Image { get; set; }
         public double Length { get; set; }
         public bool IsDeleted { get; set; }
+
+        public List<RouteImage> Images { get; set; }
     }
 }

@@ -3,10 +3,7 @@ using CycleRoutesCore.Domain.Helpers;
 using CycleRoutesCore.Domain.Interfaces;
 using CycleRoutesCore.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace CycleRoutesCore.Domain.Repositories
@@ -36,15 +33,14 @@ namespace CycleRoutesCore.Domain.Repositories
             await _db.SaveChangesAsync();
 
             return user;
-
         }
+
         public async Task Update(User user)
         {
             User existingUser = _db.Users.FirstOrDefault(x => x.Id == user.Id);
             _db.Entry(existingUser).CurrentValues.SetValues(user);
             await _db.SaveChangesAsync();
         }
-
 
         public async Task<User> GetUserByCredentials(string login, string email, string password)
         {

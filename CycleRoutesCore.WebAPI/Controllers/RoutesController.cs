@@ -1,4 +1,5 @@
-﻿using CycleRoutesCore.Domain.Interfaces;
+﻿using System;
+using CycleRoutesCore.Domain.Interfaces;
 using CycleRoutesCore.Domain.Models;
 using CycleRoutesCore.WebAPI.Auth;
 using Microsoft.AspNetCore.Cors;
@@ -21,13 +22,21 @@ namespace CycleRoutesCore.WebAPI.Controllers
             _routeRepository = routeRepository;
             _context = context;
         }
-
+        
+        [Route("")]
         [HttpGet]
-        public List<Route> GetAll()
+        public List<Route> GetAllRoutes()
         {
             AuthIdentity user = _context.HttpContext.User.Identity as AuthIdentity;
 
             return _routeRepository.GetAllRoutes();
+        }
+
+        [Route("{id}")]
+        [HttpGet]
+        public Route GetRoute(int id)
+        {
+            return _routeRepository.GetRoute(id);
         }
     }
 }

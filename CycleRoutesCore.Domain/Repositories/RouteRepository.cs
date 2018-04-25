@@ -39,12 +39,12 @@ namespace CycleRoutesCore.Domain.Repositories
 
         public List<Models.Route> GetAllRoutes()
         {
-            return _db.Routes.ToList();
+            return _db.Routes.Include(x => x.Images).ToList();
         }
 
         public Models.Route GetRoute(int id)
         {
-            return _db.Routes
+            return _db.Routes.Include(x => x.Images)
                 .Where(r => r.Id == id)
                 .FirstOrDefault();
         }
