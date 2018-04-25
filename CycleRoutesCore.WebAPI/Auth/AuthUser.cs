@@ -7,25 +7,15 @@ namespace CycleRoutesCore.WebAPI.Auth
 {
     public class AuthUser : ClaimsPrincipal
     {
-        public string UserId { get; set; }
+        public int UserId { get; set; }
         public string Email { get; set; }
         public bool IsAdministrator { get; set; }
 
-        public List<string> Roles { get; set; }
-
-        public override IIdentity Identity
-        {
-            get { return new AuthIdentity(this.UserId, this.Roles); }
-        }
-
-        public override bool IsInRole(string role)
-        {
-            return Roles.Contains(role);
-        }
-
         public void MapToSource(User user)
         {
-            // to-do
+            this.UserId = user.Id;
+            this.Email = user.Email;
+            this.IsAdministrator = user.IsAdministrator;
         }
     }
 }
