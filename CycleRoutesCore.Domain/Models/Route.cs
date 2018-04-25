@@ -15,6 +15,7 @@ namespace CycleRoutesCore.Domain.Models
         public double Length { get; set; }
         public bool IsDeleted { get; set; }
 
+        public User User { get; set; }
         public List<RouteImage> Images { get; set; }
     }
 }

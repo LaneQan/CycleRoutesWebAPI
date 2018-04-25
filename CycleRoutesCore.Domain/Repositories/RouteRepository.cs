@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CycleRoutesCore.Domain.Models;
 
 namespace CycleRoutesCore.Domain.Repositories
 {
@@ -37,16 +38,21 @@ namespace CycleRoutesCore.Domain.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public List<Models.Route> GetAllRoutes()
+        public List<Route> GetAllRoutes()
         {
             return _db.Routes.Include(x => x.Images).ToList();
         }
 
-        public Models.Route GetRoute(int id)
+        public Route GetRoute(int id)
         {
             return _db.Routes.Include(x => x.Images)
                 .Where(r => r.Id == id)
                 .FirstOrDefault();
+        }
+
+        public List<Route> GetRoutesByUserId(int userId)
+        {
+            return _db.Routes.Where(x => x.User.Id == userId).ToList();
         }
 
         protected virtual void Dispose(bool disposing)

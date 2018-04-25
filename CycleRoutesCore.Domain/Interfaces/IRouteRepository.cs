@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using CycleRoutesCore.Domain.Models;
 
 namespace CycleRoutesCore.Domain.Interfaces
 {
@@ -7,9 +8,11 @@ namespace CycleRoutesCore.Domain.Interfaces
     {
         Task UpdateRoute(Models.Route route);
 
-        Task DeleteRoute(Models.Route route);
+        Task DeleteRoute(Route route);
 
         List<Models.Route> GetAllRoutes();
+
+        List<Route> GetRoutesByUserId(int userId);
 
         Models.Route GetRoute(int id);
     }

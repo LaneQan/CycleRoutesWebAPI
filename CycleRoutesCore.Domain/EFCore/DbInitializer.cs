@@ -10,8 +10,9 @@ namespace CycleRoutesCore.Domain.EFCore
     {
         public static void Initialize(CycleRoutesContext context)
         {
-            if (context.RouteImages.Any()) { context.RouteImages.RemoveRange(context.RouteImages);}
+            /*if (context.RouteImages.Any()) { context.RouteImages.RemoveRange(context.RouteImages);}
             context.Routes.RemoveRange(context.Routes);
+            var user = context.Users.FirstOrDefault(x => x.Id == 3);
             context.Routes.AddRange(new Route
             {
                 Description = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,",
@@ -48,7 +49,8 @@ namespace CycleRoutesCore.Domain.EFCore
                     {
                         Name = "https://citydog.by/content/editor_images/2015/07_july/19_velo/9.jpg"
                     }
-                }
+                },
+                User = user
             },
                 new Route
                 {
@@ -59,7 +61,8 @@ namespace CycleRoutesCore.Domain.EFCore
                     Complexity = Complexity.Medium,
                     Type = Type.City,
                     LineType = LineType.Direct,
-                    Length = 32.1
+                    Length = 32.1,
+                    User = user
                 },
                 new Route
                 {
@@ -70,7 +73,8 @@ namespace CycleRoutesCore.Domain.EFCore
                     Complexity = Complexity.Easy,
                     Type = Type.City,
                     LineType = LineType.Circular,
-                    Length = 8.23
+                    Length = 8.23,
+                    User = user
                 },
                 new Route
                 {
@@ -81,7 +85,7 @@ namespace CycleRoutesCore.Domain.EFCore
                     Complexity = Complexity.Hard,
                     Type = Type.Mixed,
                     LineType = LineType.Direct,
-                    Length = 230.54
+                    Length = 230.54,
                 },
                 new Route
                 {
@@ -92,7 +96,7 @@ namespace CycleRoutesCore.Domain.EFCore
                     Complexity = Complexity.Medium,
                     Type = Type.Suburban,
                     LineType = LineType.Direct,
-                    Length = 160
+                    Length = 160,
                 });
             if (!context.Users.Any())
             {
@@ -103,7 +107,7 @@ namespace CycleRoutesCore.Domain.EFCore
                     Email = "admin@admin.admin"
                 });
             }
-            context.SaveChanges();
+            context.SaveChanges();*/
         }
     }
 }

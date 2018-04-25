@@ -32,11 +32,18 @@ namespace CycleRoutesCore.WebAPI.Controllers
             return _routeRepository.GetAllRoutes();
         }
 
-        [Route("{id}")]
+        [Route("{routeId:int}")]
         [HttpGet]
-        public Route GetRoute(int id)
+        public Route GetRoute(int routeId)
         {
-            return _routeRepository.GetRoute(id);
+            return _routeRepository.GetRoute(routeId);
+        }
+
+        [Route("user/{userId:int}")]
+        [HttpGet]
+        public List<Route> GetAllRoutes(int userId)
+        {
+            return _routeRepository.GetRoutesByUserId(userId);
         }
     }
 }
