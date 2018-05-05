@@ -9,5 +9,6 @@
         public string Password { get; set; }
         public string Email { get; set; }
         public bool IsAdministrator { get; set; }
+        public string Image { get; set; }
     }
 }

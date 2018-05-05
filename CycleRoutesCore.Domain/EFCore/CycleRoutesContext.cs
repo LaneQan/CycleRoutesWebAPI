@@ -17,5 +17,6 @@ namespace CycleRoutesCore.Domain.EFCore
         public DbSet<Route> Routes { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<RouteImage> RouteImages { get; set; }
+        public DbSet<Like> Likes { get; set; }
     }
 }
