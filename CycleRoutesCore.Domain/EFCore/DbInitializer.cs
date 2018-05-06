@@ -19,9 +19,10 @@ namespace CycleRoutesCore.Domain.EFCore
                 IsDeleted = false,
                 Name = "Тур по чижовке",
                 Image = "https://stat.citydog.by/content/_posts/442X361/53b47f3e27b3f.jpg",
-                Landscape = Landscapes.Hilly,
+                Landscape = Landscape.Hilly,
                 Type = Type.City,
                 LineType = LineType.Direct,
+                LengthTime = LengthTimes.Brief,
                 Length = 12.5,
                 Images = new List<RouteImage>
                 {
@@ -58,9 +59,10 @@ namespace CycleRoutesCore.Domain.EFCore
                     IsDeleted = false,
                     Name = "Едем по пригороду Минска",
                     Image = "https://stat.citydog.by/content/_posts/442X361/5968b27883970.jpg",
-                    Landscape = Landscapes.Mixed,
+                    Landscape = Landscape.Mixed,
                     Type = Type.City,
                     LineType = LineType.Direct,
+                    LengthTime = LengthTimes.Daily,
                     Length = 32.1,
                     User = user
                 },
@@ -70,9 +72,10 @@ namespace CycleRoutesCore.Domain.EFCore
                     IsDeleted = false,
                     Name = "Покатушки по городу",
                     Image = "https://stat.citydog.by/content/_posts/442X361/5345c0666ef60.jpg",
-                    Landscape = Landscapes.Mountain,
+                    Landscape = Landscape.Mountain,
                     Type = Type.City,
                     LineType = LineType.Circular,
+                    LengthTime = LengthTimes.Brief,
                     Length = 8.23,
                     User = user
                 },
@@ -82,9 +85,10 @@ namespace CycleRoutesCore.Domain.EFCore
                     IsDeleted = false,
                     Name = "Минск - Брест за 2 дня",
                     Image = "https://stat.citydog.by/content/_posts/442X361/53e234d496dcc.jpg",
-                    Landscape = Landscapes.Plain,
+                    Landscape = Landscape.Plain,
                     Type = Type.Mixed,
                     LineType = LineType.Direct,
+                    LengthTime = LengthTimes.Weekend,
                     Length = 230.54,
                 },
                 new Route
@@ -93,9 +97,10 @@ namespace CycleRoutesCore.Domain.EFCore
                     IsDeleted = false,
                     Name = "Минск - Молодечно - Минск",
                     Image = "https://stat.citydog.by/content/_posts/442X361/55ab73d5bb274.jpg",
-                    Landscape = Landscapes.Hilly,
+                    Landscape = Landscape.Hilly,
                     Type = Type.Suburban,
                     LineType = LineType.Direct,
+                    LengthTime = LengthTimes.Multiday,
                     Length = 160,
                 });*/
             /*if (!context.Users.Any())
@@ -106,8 +111,8 @@ namespace CycleRoutesCore.Domain.EFCore
                     Password = PasswordHasher.HashingPassword("admin"),
                     Email = "admin@admin.admin"
                 });
-            }
-            context.SaveChanges();*/
+            }*/
+            //context.SaveChanges();
         }
     }
 }

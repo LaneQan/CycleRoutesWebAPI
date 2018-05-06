@@ -8,9 +8,10 @@ namespace CycleRoutesCore.Domain.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public Landscapes Landscape { get; set; }
+        public Landscape Landscape { get; set; }
         public Type Type { get; set; }
         public LineType LineType { get; set; }
+        public LengthTimes LengthTime { get; set; }
         public string Image { get; set; }
         public double Length { get; set; }
         public bool IsDeleted { get; set; }

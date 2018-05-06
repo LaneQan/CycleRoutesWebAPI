@@ -1,6 +1,6 @@
 ﻿namespace CycleRoutesCore.Domain.Enums
 {
-    public enum Landscapes
+    public enum Landscape
     {
         Plain,
         Hilly,
