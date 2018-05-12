@@ -46,6 +46,7 @@ namespace CycleRoutesCore.Domain.Repositories
         public Route GetRoute(int id)
         {
             return _db.Routes.Include(x => x.Images)
+                .Include(x => x.User)
                 .Where(r => r.Id == id)
                 .FirstOrDefault();
         }

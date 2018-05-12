@@ -1,5 +1,7 @@
-﻿using CycleRoutesCore.Domain.Enums;
+﻿using System;
+using CycleRoutesCore.Domain.Enums;
 using System.Collections.Generic;
+using Type = CycleRoutesCore.Domain.Enums.Type;
 
 namespace CycleRoutesCore.Domain.Models
 {
@@ -14,6 +16,7 @@ namespace CycleRoutesCore.Domain.Models
         public LengthTimes LengthTime { get; set; }
         public string Image { get; set; }
         public double Length { get; set; }
+        public string UploadDate { get; set; }
         public bool IsDeleted { get; set; }
 
         public User User { get; set; }
