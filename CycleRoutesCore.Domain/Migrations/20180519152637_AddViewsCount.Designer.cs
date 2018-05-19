@@ -12,9 +12,10 @@ using System;
 namespace CycleRoutesCore.Domain.Migrations
 {
     [DbContext(typeof(CycleRoutesContext))]
-    partial class CycleRoutesContextModelSnapshot : ModelSnapshot
+    [Migration("20180519152637_AddViewsCount")]
+    partial class AddViewsCount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,20 +118,6 @@ namespace CycleRoutesCore.Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("CycleRoutesCore.Domain.Models.View", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("RouteId");
-
-                    b.Property<string>("UserIP");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Views");
                 });
 
             modelBuilder.Entity("CycleRoutesCore.Domain.Models.Like", b =>

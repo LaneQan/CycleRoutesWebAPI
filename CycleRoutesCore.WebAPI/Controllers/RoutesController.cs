@@ -36,7 +36,8 @@ namespace CycleRoutesCore.WebAPI.Controllers
         [HttpGet]
         public Route GetRoute(int routeId)
         {
-            return _routeRepository.GetRoute(routeId);
+            var userIp = HttpContext.Connection.RemoteIpAddress.ToString();
+            return _routeRepository.GetRoute(routeId, userIp);
         }
 
         [Route("user/{userId:int}")]

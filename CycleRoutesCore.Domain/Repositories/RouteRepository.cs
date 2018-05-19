@@ -43,12 +43,26 @@ namespace CycleRoutesCore.Domain.Repositories
             return _db.Routes.Include(x => x.Images).ToList();
         }
 
-        public Route GetRoute(int id)
+        public Route GetRoute(int id, string userIp)
         {
-            return _db.Routes.Include(x => x.Images)
+            var route = _db.Routes.Include(x => x.Images)
                 .Include(x => x.User)
                 .Where(r => r.Id == id)
                 .FirstOrDefault();
+
+            if (_db.Views.FirstOrDefault(x => (x.RouteId == id && x.UserIP == userIp)) == null && route != null)
+            {
+                _db.Views.Add(new View
+                {
+                    RouteId = id,
+                    UserIP = userIp
+                });
+                route.ViewsCount++;
+            }
+
+            _db.SaveChanges();
+
+            return route;
         }
 
         public List<Route> GetRoutesByUserId(int userId)

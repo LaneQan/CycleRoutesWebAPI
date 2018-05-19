@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace CycleRoutesCore.WebAPI
 {
@@ -69,6 +70,12 @@ namespace CycleRoutesCore.WebAPI
 
             app.UseAuthentication();
             app.UseMvc();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                                   ForwardedHeaders.XForwardedProto
+            });
 
             context.Database.Migrate();
             if (context.Database.GetAppliedMigrations().Any())

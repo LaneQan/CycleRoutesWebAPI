@@ -14,6 +14,6 @@ namespace CycleRoutesCore.Domain.Interfaces
 
         List<Route> GetRoutesByUserId(int userId);
 
-        Models.Route GetRoute(int id);
+        Models.Route GetRoute(int id, string userIP);
     }
 }
