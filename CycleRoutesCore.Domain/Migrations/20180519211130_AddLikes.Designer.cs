@@ -12,9 +12,10 @@ using System;
 namespace CycleRoutesCore.Domain.Migrations
 {
     [DbContext(typeof(CycleRoutesContext))]
-    partial class CycleRoutesContextModelSnapshot : ModelSnapshot
+    [Migration("20180519211130_AddLikes")]
+    partial class AddLikes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -9,11 +9,11 @@ namespace CycleRoutesCore.WebAPI.Auth
 
     public class JWTAuthorizeHandler : AuthorizationHandler<AuthorizeRequirement>
     {
-        public IConfiguration Configuration { get; private set; }
+        private IConfiguration _config;
 
-        public JWTAuthorizeHandler(IConfiguration configuration)
+        public JWTAuthorizeHandler(IConfiguration config)
         {
-            Configuration = configuration;
+            _config = config;
         }
 
         protected override async Task HandleRequirementAsync(
@@ -36,7 +36,7 @@ namespace CycleRoutesCore.WebAPI.Auth
             }
             if (!string.IsNullOrEmpty(authHeader))
             {
-                string key = Configuration["Data:jwtKey"];
+                string key = _config["Data:jwtKey"];
                 try
                 {
                     httpContext.User =

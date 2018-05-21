@@ -38,9 +38,22 @@ namespace CycleRoutesCore.Domain.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public List<Route> GetAllRoutes()
+        public List<Route> GetAllRoutes(int? userId)
         {
-            return _db.Routes.Include(x => x.Images).ToList();
+            var routes = _db.Routes.Include(x => x.Images).ToList();
+            if (userId == null)
+            {
+                return routes;
+            }
+            else
+            {
+                routes.ForEach(route =>
+                {
+                    if (_db.Likes.FirstOrDefault(like => like.RouteId == route.Id && like.UserId == userId) != null)
+                        route.IsLiked = true;
+                });
+                return routes;
+            }
         }
 
         public Route GetRoute(int id, string userIp)
@@ -50,7 +63,10 @@ namespace CycleRoutesCore.Domain.Repositories
                 .Where(r => r.Id == id)
                 .FirstOrDefault();
 
-            if (_db.Views.FirstOrDefault(x => (x.RouteId == id && x.UserIP == userIp)) == null && route != null)
+            if (route == null)
+                return null;
+
+            if (_db.Views.FirstOrDefault(x => (x.RouteId == id && x.UserIP == userIp)) == null)
             {
                 _db.Views.Add(new View
                 {
@@ -60,7 +76,7 @@ namespace CycleRoutesCore.Domain.Repositories
                 route.ViewsCount++;
             }
 
-            _db.SaveChanges();
+            _db.SaveChangesAsync();
 
             return route;
         }
@@ -70,6 +86,33 @@ namespace CycleRoutesCore.Domain.Repositories
             return _db.Routes.Where(x => x.User.Id == userId).ToList();
         }
 
+        public void LikeRoute(int userId, int routeId)
+        {
+            var route = _db.Routes
+                .Where(r => r.Id == routeId)
+                .FirstOrDefault();
+
+            if (route == null)
+                return;
+
+            var like = _db.Likes.FirstOrDefault(x => x.RouteId == routeId && x.UserId == userId);
+            if (like == null)
+            {
+                _db.Likes.Add(new Like
+                {
+                    RouteId = routeId,
+                    UserId = userId
+                });
+                route.LikesCount++;
+            }
+            else
+            {
+                _db.Likes.Remove(like);
+                route.LikesCount--;
+            }
+
+            _db.SaveChanges();
+        }
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)

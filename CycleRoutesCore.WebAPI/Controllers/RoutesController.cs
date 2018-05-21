@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CycleRoutesCore.WebAPI.Controllers
 {
-    //[Authorize(Policy = "JWTAuthorize")]
+    [Authorize(Policy = "JWTAuthorize")]
     [EnableCors("AllowAny")]
     [Route("api/[controller]")]
     public class RoutesController : Controller
@@ -22,16 +24,17 @@ namespace CycleRoutesCore.WebAPI.Controllers
             _routeRepository = routeRepository;
             _context = context;
         }
-        
+
+        [AllowAnonymous]
         [Route("")]
         [HttpGet]
         public List<Route> GetAllRoutes()
         {
-            AuthIdentity user = _context.HttpContext.User.Identity as AuthIdentity;
-
-            return _routeRepository.GetAllRoutes();
+            AuthUser user = _context.HttpContext.User as AuthUser;
+            return _routeRepository.GetAllRoutes(3);
         }
 
+        [AllowAnonymous]
         [Route("{routeId:int}")]
         [HttpGet]
         public Route GetRoute(int routeId)
@@ -45,6 +48,15 @@ namespace CycleRoutesCore.WebAPI.Controllers
         public List<Route> GetAllRoutes(int userId)
         {
             return _routeRepository.GetRoutesByUserId(userId);
+        }
+
+        [Route("like/{routeId:int}")]
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult LikeRoute(int routeId)
+        {
+            _routeRepository.LikeRoute(3, routeId);
+            return Ok();
         }
     }
 }

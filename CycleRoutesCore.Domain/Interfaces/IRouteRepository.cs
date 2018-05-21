@@ -10,10 +10,12 @@ namespace CycleRoutesCore.Domain.Interfaces
 
         Task DeleteRoute(Route route);
 
-        List<Models.Route> GetAllRoutes();
+        List<Models.Route> GetAllRoutes(int? userId);
 
         List<Route> GetRoutesByUserId(int userId);
 
         Models.Route GetRoute(int id, string userIP);
+
+        void LikeRoute(int userId, int routeId);
     }
 }

@@ -3,8 +3,7 @@
     public class Like
     {
         public int Id { get; set; }
-        public Route Route { get; set; }
-        public User User { get; set; }
-        public bool State { get; set; }
+        public int RouteId { get; set; }
+        public int UserId { get; set; }
     }
 }

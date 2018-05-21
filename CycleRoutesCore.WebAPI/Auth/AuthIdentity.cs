@@ -5,9 +5,9 @@ namespace CycleRoutesCore.WebAPI.Auth
 {
     public class AuthIdentity : IIdentity
     {
-        public AuthIdentity(string name, List<string> roles)
+        public AuthIdentity(int id, List<string> roles)
         {
-            this.Name = name;
+            this.Name = id.ToString();
             this.Roles = roles;
         }
 
