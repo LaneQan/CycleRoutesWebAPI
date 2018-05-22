@@ -1,28 +1,28 @@
-﻿using System;
-using CycleRoutesCore.Domain.Interfaces;
+﻿using CycleRoutesCore.Domain.Interfaces;
 using CycleRoutesCore.Domain.Models;
 using CycleRoutesCore.WebAPI.Auth;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 
 namespace CycleRoutesCore.WebAPI.Controllers
 {
-    [Authorize(Policy = "JWTAuthorize")]
     [EnableCors("AllowAny")]
+    [Authorize(Policy = "JWTAuthorize")]
     [Route("api/[controller]")]
     public class RoutesController : Controller
     {
         private readonly IRouteRepository _routeRepository;
-        private readonly IHttpContextAccessor _context;
+        private IConfiguration _config;
 
-        public RoutesController(IRouteRepository routeRepository, IHttpContextAccessor context)
+        public RoutesController(IRouteRepository routeRepository, IConfiguration config)
         {
             _routeRepository = routeRepository;
-            _context = context;
+            _config = config;
         }
 
         [AllowAnonymous]
@@ -30,8 +30,8 @@ namespace CycleRoutesCore.WebAPI.Controllers
         [HttpGet]
         public List<Route> GetAllRoutes()
         {
-            AuthUser user = _context.HttpContext.User as AuthUser;
-            return _routeRepository.GetAllRoutes(3);
+            var user = new JWTAuthorizeHandler(_config).DecodeToken(HttpContext.Request.Headers["Authorization"]);
+            return _routeRepository.GetAllRoutes( user?.Id);
         }
 
         [AllowAnonymous]
@@ -40,7 +40,8 @@ namespace CycleRoutesCore.WebAPI.Controllers
         public Route GetRoute(int routeId)
         {
             var userIp = HttpContext.Connection.RemoteIpAddress.ToString();
-            return _routeRepository.GetRoute(routeId, userIp);
+            var user = new JWTAuthorizeHandler(_config).DecodeToken(HttpContext.Request.Headers["Authorization"]);
+            return _routeRepository.GetRoute(routeId, userIp, user?.Id);
         }
 
         [Route("user/{userId:int}")]
@@ -55,7 +56,8 @@ namespace CycleRoutesCore.WebAPI.Controllers
         [AllowAnonymous]
         public IActionResult LikeRoute(int routeId)
         {
-            _routeRepository.LikeRoute(3, routeId);
+            var user = new JWTAuthorizeHandler(_config).DecodeToken(HttpContext.Request.Headers["Authorization"]);
+            _routeRepository.LikeRoute(user.Id, routeId);
             return Ok();
         }
     }

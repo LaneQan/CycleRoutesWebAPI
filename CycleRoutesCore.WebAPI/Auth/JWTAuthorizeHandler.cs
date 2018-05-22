@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using System.Web;
+using CycleRoutesCore.Domain.Models;
+using Microsoft.Extensions.Primitives;
 
 namespace CycleRoutesCore.WebAPI.Auth
 {
@@ -34,6 +36,7 @@ namespace CycleRoutesCore.WebAPI.Auth
                 if (request.Query.ContainsKey("api_key"))
                     authHeader = HttpUtility.UrlDecode(request.Query["api_key"]);
             }
+
             if (!string.IsNullOrEmpty(authHeader))
             {
                 string key = _config["Data:jwtKey"];
@@ -47,6 +50,34 @@ namespace CycleRoutesCore.WebAPI.Auth
                 {
                 }
             }
+        }
+
+        public string BuildToken(User user)
+        {
+
+            AuthUser authUser = new AuthUser();
+            authUser.MapToSource(user);
+            return (JwtCore.JsonWebToken.Encode(authUser, _config["Data:jwtKey"], JwtCore.JwtHashAlgorithm.HS256));
+        }
+
+        public AuthUser DecodeToken(StringValues header)
+        {
+            AuthUser user = null;
+            if (header.Count > 0 && header[0] != "undefined" && header[0].StartsWith("Bearer "))
+            {
+                var jwt = header[0].Substring("Bearer ".Length);
+                if ( jwt == "null") return null;
+                string key = _config["Data:jwtKey"];
+                try
+                {
+                    user =  JwtCore.JsonWebToken.DecodeToObject<AuthUser>(jwt, key);
+                }
+                catch (JwtCore.SignatureVerificationException)
+                {
+                }
+            }
+
+            return user;
         }
     }
 }

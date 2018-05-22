@@ -56,7 +56,7 @@ namespace CycleRoutesCore.Domain.Repositories
             }
         }
 
-        public Route GetRoute(int id, string userIp)
+        public Route GetRoute(int id, string userIp, int? userId)
         {
             var route = _db.Routes.Include(x => x.Images)
                 .Include(x => x.User)
@@ -78,7 +78,20 @@ namespace CycleRoutesCore.Domain.Repositories
 
             _db.SaveChangesAsync();
 
-            return route;
+            if (userId == null)
+            {
+                return route;
+            }
+            else
+            {
+                if (_db.Likes.FirstOrDefault(like => like.RouteId == route.Id && like.UserId == userId) != null)
+                {
+                    route.IsLiked = true;
+
+                }
+
+                return route;
+            }
         }
 
         public List<Route> GetRoutesByUserId(int userId)

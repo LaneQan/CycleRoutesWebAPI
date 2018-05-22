@@ -15,12 +15,13 @@ namespace CycleRoutesCore.WebAPI.Controllers
     public class OperationController : Controller
     {
         private IUserRepository _userRepository;
-        private string _jwtKey;
+        private IConfiguration _config;
+
 
         public OperationController(IUserRepository userRepository, IConfiguration config)
         {
             _userRepository = userRepository;
-            _jwtKey = config["Data:jwtKey"];
+            _config = config;
         }
 
         [AllowAnonymous]
@@ -33,13 +34,7 @@ namespace CycleRoutesCore.WebAPI.Controllers
             if (user == null)
                 return Unauthorized();
 
-            AuthUser authUser = new AuthUser();
-            authUser.MapToSource(user);
-
-
-            var token = JwtCore.JsonWebToken.Encode(authUser, _jwtKey, JwtCore.JwtHashAlgorithm.HS256);
-
-            return Ok(token);
+            return Ok(new JWTAuthorizeHandler(_config).BuildToken(user));
         }
 
         [AllowAnonymous]
@@ -52,11 +47,7 @@ namespace CycleRoutesCore.WebAPI.Controllers
             if (await _userRepository.Create(viewModel.MapToUser(user)) == null)
                 return BadRequest();
 
-            AuthUser authUser = new AuthUser();
-            authUser.MapToSource(user);
-            var token = JwtCore.JsonWebToken.Encode(user, _jwtKey, JwtCore.JwtHashAlgorithm.HS256);
-
-            return Ok(token);
+            return Ok(new JWTAuthorizeHandler(_config).BuildToken(user));
         }
     }
 }

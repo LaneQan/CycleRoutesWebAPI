@@ -2,6 +2,7 @@
 using CycleRoutesCore.Domain.Interfaces;
 using CycleRoutesCore.Domain.Repositories;
 using CycleRoutesCore.WebAPI.Auth;
+using System.Linq;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -10,8 +11,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using Microsoft.AspNetCore.HttpOverrides;
 
 namespace CycleRoutesCore.WebAPI
 {
@@ -31,8 +30,6 @@ namespace CycleRoutesCore.WebAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(_ => Configuration);
-
             services.AddCors(o => o.AddPolicy("AllowAny", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -40,37 +37,41 @@ namespace CycleRoutesCore.WebAPI
                     .AllowAnyHeader();
             }));
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<IAuthorizationHandler, JWTAuthorizeHandler>();
-            services.AddScoped<IRouteRepository, RouteRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddSingleton(_ => Configuration);
-
             services.AddDbContext<CycleRoutesContext>(options =>
-                options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+                    options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer();
+                    .AddJwtBearer();
 
-            services.AddAuthorization(options =>
-            {
+            services.AddAuthorization(options => {
                 options.AddPolicy("JWTAuthorize",
-                    policy => policy.Requirements.Add(new AuthorizeRequirement()));
+                                policy => policy.Requirements.Add(new AuthorizeRequirement()));
             }
             );
 
+            services.AddSingleton(_ => Configuration);
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IAuthorizationHandler, JWTAuthorizeHandler>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRouteRepository, RouteRepository>();
 
             services.AddMvc();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, CycleRoutesContext context)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseMvc();
 
 
             context.Database.Migrate();
+
             if (context.Database.GetAppliedMigrations().Any())
                 DbInitializer.Initialize(context);
         }
