@@ -1,4 +1,5 @@
-﻿using CycleRoutesCore.Domain.EFCore;
+﻿using System;
+using CycleRoutesCore.Domain.EFCore;
 using CycleRoutesCore.Domain.Helpers;
 using CycleRoutesCore.Domain.Interfaces;
 using CycleRoutesCore.Domain.Models;
@@ -27,6 +28,7 @@ namespace CycleRoutesCore.Domain.Repositories
 
             user.IsAdministrator = false;
             user.Password = user.Password.HashingPassword();
+            user.RegisteredAt = DateTime.Now;
 
             _db.Users.Add(user);
 
@@ -37,16 +39,23 @@ namespace CycleRoutesCore.Domain.Repositories
 
         public async Task Update(User user)
         {
-            User existingUser = _db.Users.FirstOrDefault(x => x.Id == user.Id);
+            User existingUser = await _db.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
             _db.Entry(existingUser).CurrentValues.SetValues(user);
             await _db.SaveChangesAsync();
         }
 
         public async Task<User> GetUserByCredentials(string login, string email, string password)
         {
-            var test = _db.Users.LastOrDefault();
             return await _db.Users
-                  .FirstOrDefaultAsync(u => ((u.Login.Equals(login) || u.Email.Equals(email)) && u.Password.Equals(password.HashingPassword())));
+                  .FirstOrDefaultAsync(u => (u.Login.Equals(login) || u.Email.Equals(email)) && u.Password.Equals(password.HashingPassword()));
+        }
+
+        public async Task<User> GetUserById(int userId)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            user.LikesCount = await _db.Likes.Where(x => x.UserId == user.Id).CountAsync();
+            user.RoutesCount = await _db.Routes.Where(x => x.User.Id == user.Id).CountAsync();
+            return user;
         }
     }
 }

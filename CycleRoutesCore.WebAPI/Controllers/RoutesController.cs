@@ -3,6 +3,7 @@ using CycleRoutesCore.Domain.Models;
 using CycleRoutesCore.WebAPI.Auth;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -28,27 +29,34 @@ namespace CycleRoutesCore.WebAPI.Controllers
         [AllowAnonymous]
         [Route("")]
         [HttpGet]
-        public List<Route> GetAllRoutes()
+        public async Task<List<Route>> GetAllRoutes()
         {
             var user = new JWTAuthorizeHandler(_config).DecodeToken(HttpContext.Request.Headers["Authorization"]);
-            return _routeRepository.GetAllRoutes( user?.Id);
+            return await _routeRepository.GetAllRoutes( user?.Id);
         }
 
         [AllowAnonymous]
         [Route("{routeId:int}")]
         [HttpGet]
-        public Route GetRoute(int routeId)
+        public async Task <Route> GetRoute(int routeId)
         {
             var userIp = HttpContext.Connection.RemoteIpAddress.ToString();
             var user = new JWTAuthorizeHandler(_config).DecodeToken(HttpContext.Request.Headers["Authorization"]);
-            return _routeRepository.GetRoute(routeId, userIp, user?.Id);
+            return await _routeRepository.GetRoute(routeId, userIp, user?.Id);
         }
 
         [Route("user/{userId:int}")]
         [HttpGet]
-        public List<Route> GetAllRoutes(int userId)
+        public async Task<List<Route>> GetAllRoutes(int userId)
         {
-            return _routeRepository.GetRoutesByUserId(userId);
+            return await _routeRepository.GetRoutesByUserId(userId);
+        }
+
+        [Route("favourite/{userId:int}")]
+        [HttpGet]
+        public async Task<List<Route>> GetFavouriteRoutes(int userId)
+        {
+            return await _routeRepository.GetFavouriteRoutes(userId);
         }
 
         [Route("like/{routeId:int}")]
@@ -57,6 +65,7 @@ namespace CycleRoutesCore.WebAPI.Controllers
         public IActionResult LikeRoute(int routeId)
         {
             var user = new JWTAuthorizeHandler(_config).DecodeToken(HttpContext.Request.Headers["Authorization"]);
+            if (user == null) return BadRequest();
             _routeRepository.LikeRoute(user.Id, routeId);
             return Ok();
         }

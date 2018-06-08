@@ -12,7 +12,7 @@ namespace CycleRoutesCore.Domain.EFCore
         {
             /*if (context.RouteImages.Any()) { context.RouteImages.RemoveRange(context.RouteImages);}
             context.Routes.RemoveRange(context.Routes);
-            var user = context.Users.FirstOrDefault(x => x.Id == 3);
+            var user = context.Users.FirstOrDefault(x => x.Id == 2);
             user.Image =
                 "https://x1.xingassets.com/image/1_0_5_49a1e2d5e_19863724_1/alexander-bender-foto.1024x1024.jpg";
             context.Routes.AddRange(new Route
@@ -95,6 +95,7 @@ namespace CycleRoutesCore.Domain.EFCore
                     LineType = LineType.Direct,
                     LengthTime = LengthTimes.Weekend,
                     Length = 230.54,
+                    User = context.Users.FirstOrDefault(x => x.Id == 3),
                     UploadDate = "12.05.2018"
                 },
                 new Route
@@ -108,22 +109,11 @@ namespace CycleRoutesCore.Domain.EFCore
                     LineType = LineType.Direct,
                     LengthTime = LengthTimes.Multiday,
                     Length = 160,
+                    User = context.Users.FirstOrDefault(x => x.Id == 3),
                     UploadDate = "12.05.2018"
-                });*/
-            
-            
-            /*if (!context.Users.Any())
-            {
-                context.Users.Add(new User()
-                {
-                    Login = "admin",
-                    Password = PasswordHasher.HashingPassword("admin"),
-                    Email = "admin@admin.admin"
                 });
-            }*/
 
-
-            //context.SaveChanges();
+            context.SaveChanges();*/
         }
     }
 }
