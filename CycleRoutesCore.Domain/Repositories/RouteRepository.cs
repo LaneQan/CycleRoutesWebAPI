@@ -17,31 +17,24 @@ namespace CycleRoutesCore.Domain.Repositories
             _db = db;
         }
 
-        public async Task Create(Route route)
+        public async Task<int> Create(Route route, int userId)
         {
-            _db.Routes.Add(route);
+            route.User = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            await _db.Routes.AddAsync(route);
             await _db.SaveChangesAsync();
+            return _db.Routes.LastAsync().Result.Id;
         }
 
-        public async Task<Route> UpdateRoute(Route route)
+        public async Task DeleteRoute(int routeId)
         {
-            Route existingRoute = await _db.Routes.FirstOrDefaultAsync(x => x.Id == route.Id);
-            _db.Entry(existingRoute).CurrentValues.SetValues(route);
+            var route = await _db.Routes.FirstOrDefaultAsync(x => x.Id == routeId);
+            route.IsDeleted = true;
             await _db.SaveChangesAsync();
-            return existingRoute;
-        }
-
-        public async Task<Route> DeleteRoute(Route deletedRoute)
-        {
-            deletedRoute.IsDeleted = true;
-            _db.Entry(deletedRoute).State = EntityState.Modified;
-            await _db.SaveChangesAsync();
-            return deletedRoute;
         }
 
         public async Task<List<Route>> GetAllRoutes(int? userId)
         {
-            var routes = await _db.Routes.Include(x => x.Images).ToListAsync();
+            var routes = await _db.Routes.Where(x => x.IsDeleted == false).Include(x => x.Images).ToListAsync();
             if (userId == null)
             {
                 return routes;
@@ -97,13 +90,13 @@ namespace CycleRoutesCore.Domain.Repositories
 
         public async Task<List<Route>> GetRoutesByUserId(int userId)
         {
-            return await _db.Routes.Where(x => x.User.Id == userId).ToListAsync();
+            return await _db.Routes.Where(x => x.User.Id == userId && x.IsDeleted == false).ToListAsync();
         }
 
         public async Task<List<Route>> GetFavouriteRoutes(int userId)
         {
             var routesIds = await _db.Likes.Where(x => x.UserId == userId).Select(y => y.RouteId).ToListAsync();
-            return await _db.Routes.Where(x => routesIds.Contains(x.Id)).ToListAsync();
+            return await _db.Routes.Where(x => routesIds.Contains(x.Id) && x.IsDeleted == false).ToListAsync();
         }
 
         public void LikeRoute(int userId, int routeId)

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,7 +35,8 @@ namespace CycleRoutesCore.WebAPI
             {
                 builder.AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader();
+                    .AllowAnyHeader()
+                    .AllowCredentials();
             }));
 
             services.AddDbContext<CycleRoutesContext>(options =>
@@ -54,6 +56,13 @@ namespace CycleRoutesCore.WebAPI
             services.AddSingleton<IAuthorizationHandler, JWTAuthorizeHandler>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRouteRepository, RouteRepository>();
+
+            services.Configure<FormOptions>(o => {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MemoryBufferThreshold = int.MaxValue;
+                o.ValueCountLimit = 2048;
+            });
 
             services.AddMvc();
         }

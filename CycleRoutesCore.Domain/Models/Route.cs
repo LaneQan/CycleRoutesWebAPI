@@ -17,10 +17,11 @@ namespace CycleRoutesCore.Domain.Models
         public LengthTimes LengthTime { get; set; }
         public string Image { get; set; }
         public double Length { get; set; }
-        public string UploadDate { get; set; }
+        public DateTime UploadDate { get; set; }
         public bool IsDeleted { get; set; }
         public int ViewsCount { get; set; }
         public int LikesCount { get; set; }
+        public string MapLink { get; set; }
 
         [NotMapped]
         public bool IsLiked { get; set; }

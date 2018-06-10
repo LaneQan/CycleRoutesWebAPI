@@ -4,11 +4,9 @@ using CycleRoutesCore.Domain.Models;
 
 namespace CycleRoutesCore.Domain.Interfaces
 {
-    public interface IRouteRepository : IRepository<Models.Route>
+    public interface IRouteRepository 
     {
-        Task <Route> UpdateRoute(Route route);
-
-        Task <Route> DeleteRoute(Route route);
+        Task DeleteRoute(int routeId);
 
         Task<List<Route>> GetAllRoutes(int? userId);
 
@@ -17,6 +15,8 @@ namespace CycleRoutesCore.Domain.Interfaces
         Task<Route> GetRoute(int id, string userIP, int? userId);
 
         Task<List<Route>> GetFavouriteRoutes(int userId);
+
+        Task<int> Create(Route route, int userId);
 
         void LikeRoute(int userId, int routeId);
     }
