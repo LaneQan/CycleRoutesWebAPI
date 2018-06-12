@@ -10,5 +10,9 @@ namespace CycleRoutesCore.Domain.Interfaces
         Task<User> Create(User user);
 
         Task<User> GetUserById(int userId);
+
+        Task UploadImage(string imgUrl, int userId);
+
+        Task DeleteImage(int userId);
     }
 }

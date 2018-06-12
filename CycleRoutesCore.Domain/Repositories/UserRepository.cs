@@ -57,5 +57,19 @@ namespace CycleRoutesCore.Domain.Repositories
             user.RoutesCount = await _db.Routes.Where(x => x.User.Id == user.Id).CountAsync();
             return user;
         }
+
+        public async Task UploadImage(string imageUrl, int userId)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            user.Image = imageUrl;
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task DeleteImage(int userId)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            user.Image = "";
+            await _db.SaveChangesAsync();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CycleRoutesCore.Domain.Enums;
 using CycleRoutesCore.Domain.Helpers;
 using CycleRoutesCore.Domain.Models;
@@ -111,9 +112,29 @@ namespace CycleRoutesCore.Domain.EFCore
                     Length = 160,
                     User = context.Users.FirstOrDefault(x => x.Id == 3),
                     UploadDate = "12.05.2018"
-                });
+                });*/
 
-            context.SaveChanges();*/
+            /*context.Users.Add(new User
+            {
+                IsAdministrator = true,
+                CurrentCity = "Минск",
+                Email = "admin@admin.by",
+                Firstname = "Админ",
+                Lastname = "Админов",
+                Login = "admin",
+                Password = PasswordHasher.HashingPassword("admin@admin.by")
+            });
+            context.Users.Add(new User
+            {
+                IsAdministrator = false,
+                CurrentCity = "Минск",
+                Email = "user@user.by",
+                Firstname = "Пользователь",
+                Lastname = "Пользователев",
+                Login = "user",
+                Password = PasswordHasher.HashingPassword("user@user.by")
+            });
+            */
         }
     }
 }

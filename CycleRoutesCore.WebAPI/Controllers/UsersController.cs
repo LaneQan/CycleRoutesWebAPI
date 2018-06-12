@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using CycleRoutesCore.WebAPI.Helpers;
 
 namespace CycleRoutesCore.WebAPI.Controllers
 {
@@ -42,41 +43,40 @@ namespace CycleRoutesCore.WebAPI.Controllers
 
         [Route("upload")]
         [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile photo)
+        public async Task<IActionResult> Upload(IFormCollection form)
         {
-            if (photo == null ||
-                photo.Length == 0 || photo.Length > (1024 * 1024 * 100) ||
-                !(new string[] { ".png", ".jpg", ".jpeg" }).Contains(Path.GetExtension(photo.FileName)))
-                return BadRequest();
-            string fileName;
-            try
-            {
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img");
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-                fileName = photo.FileName.GetHashCode().ToString("x2") + Path.GetExtension(photo.FileName);
-                using (var memStream = new MemoryStream())
-                {
-                    await photo.CopyToAsync(memStream);
-                    SHA1 sha = new SHA1CryptoServiceProvider();
-                    memStream.Position = 0;
-                    fileName = BitConverter.ToString(sha.ComputeHash(memStream)).Replace("-", "").ToLower() +
-                               Path.GetExtension(photo.FileName);
-                    if (System.IO.File.Exists(Path.Combine(path, fileName)))
-                        return Ok(fileName);
+            int userId = Convert.ToInt32(form["UserId"][0]);
 
-                    using (var fileStream = new FileStream(Path.Combine(path, fileName), FileMode.CreateNew))
+            if (form.Files.Count > 0)
+            {
+                var uploader = new ImgurUploader(); ;
+                foreach (IFormFile file in form.Files)
+                {
+                    if (file.Length > 0)
                     {
-                        memStream.WriteTo(fileStream);
+                        var imgUrl = "";
+                        using (var ms = new MemoryStream())
+                        {
+                            file.CopyTo(ms);
+                            var fileBytes = ms.ToArray();
+                            string s = Convert.ToBase64String(fileBytes);
+                            imgUrl = uploader.UploadImage(s);
+                        }
+
+                        await _userRepository.UploadImage(imgUrl, userId);
                     }
                 }
             }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            return this.Content("OK");
+        }
 
-            return Ok(fileName);
+        [Route("delete/{userId:int}")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> DeleteImage(int userId)
+        {
+            await _userRepository.DeleteImage(userId);
+            return Ok();
         }
 
     }

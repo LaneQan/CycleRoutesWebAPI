@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using CycleRoutesCore.Domain.Enums;
+using CycleRoutesCore.WebAPI.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -108,29 +110,21 @@ namespace CycleRoutesCore.WebAPI.Controllers
 
             if (routeInfo.Files.Count > 0)
             {
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img");
-
-                if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
+                var uploader = new ImgurUploader(); ;
                 foreach (IFormFile file in routeInfo.Files)
                 {
                     if (file.Length > 0)
                     {
-                        string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.ToString();
-                        var extension = Path.GetExtension(file.FileName);
-                        string uniqFilename = Path.GetFileNameWithoutExtension(fileName) +
-                            "_" +
-                            Guid.NewGuid().ToString().Substring(0, 4) +
-                            Path.GetExtension(fileName);
-                        if (System.IO.File.Exists(Path.Combine(path, fileName)))
-                            return Ok(fileName);
+                        var imgUrl = "";
+                            using (var ms = new MemoryStream())
+                            {
+                                file.CopyTo(ms);
+                                var fileBytes = ms.ToArray();
+                                string s = Convert.ToBase64String(fileBytes);
+                                imgUrl = uploader.UploadImage(s);
+                            }
 
-                        using (var fileStream = new FileStream(Path.Combine(path, uniqFilename), FileMode.Create))
-                        {
-                            file.CopyTo(fileStream);
-                        }
-
-                        images.Add(new RouteImage {Name = uniqFilename});
+                       images.Add(new RouteImage {Name = imgUrl });
                     }
                 }
             }

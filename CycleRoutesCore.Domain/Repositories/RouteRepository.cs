@@ -48,6 +48,7 @@ namespace CycleRoutesCore.Domain.Repositories
                 });
                 return routes;
             }
+
         }
 
         public async Task<Route> GetRoute(int id, string userIp, int? userId)
@@ -90,13 +91,13 @@ namespace CycleRoutesCore.Domain.Repositories
 
         public async Task<List<Route>> GetRoutesByUserId(int userId)
         {
-            return await _db.Routes.Where(x => x.User.Id == userId && x.IsDeleted == false).ToListAsync();
+            return await _db.Routes.Where(x => x.User.Id == userId && x.IsDeleted == false).Include(x => x.Images).ToListAsync();
         }
 
         public async Task<List<Route>> GetFavouriteRoutes(int userId)
         {
             var routesIds = await _db.Likes.Where(x => x.UserId == userId).Select(y => y.RouteId).ToListAsync();
-            return await _db.Routes.Where(x => routesIds.Contains(x.Id) && x.IsDeleted == false).ToListAsync();
+            return await _db.Routes.Where(x => routesIds.Contains(x.Id) && x.IsDeleted == false).Include(x => x.Images).ToListAsync();
         }
 
         public void LikeRoute(int userId, int routeId)
