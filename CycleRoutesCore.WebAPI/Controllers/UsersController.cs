@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
 using CycleRoutesCore.WebAPI.Helpers;
+using CycleRoutesCore.WebAPI.ViewModels;
 
 namespace CycleRoutesCore.WebAPI.Controllers
 {
@@ -46,7 +47,7 @@ namespace CycleRoutesCore.WebAPI.Controllers
         public async Task<IActionResult> Upload(IFormCollection form)
         {
             int userId = Convert.ToInt32(form["UserId"][0]);
-
+            var imgUrl = "";
             if (form.Files.Count > 0)
             {
                 var uploader = new ImgurUploader(); ;
@@ -54,7 +55,6 @@ namespace CycleRoutesCore.WebAPI.Controllers
                 {
                     if (file.Length > 0)
                     {
-                        var imgUrl = "";
                         using (var ms = new MemoryStream())
                         {
                             file.CopyTo(ms);
@@ -67,7 +67,8 @@ namespace CycleRoutesCore.WebAPI.Controllers
                     }
                 }
             }
-            return this.Content("OK");
+
+            return Ok(imgUrl);
         }
 
         [Route("delete/{userId:int}")]
@@ -76,6 +77,15 @@ namespace CycleRoutesCore.WebAPI.Controllers
         public async Task<IActionResult> DeleteImage(int userId)
         {
             await _userRepository.DeleteImage(userId);
+            return Ok();
+        }
+
+        [Route("edit")]
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> EditInfo([FromBody] EditUserViewModel user)
+        {
+            await _userRepository.EditInfo(new User{ Id = user.Id, About = user.About, CurrentCity = user.CurrentCity, Phone = user.Phone});
             return Ok();
         }
 

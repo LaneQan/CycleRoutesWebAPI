@@ -37,10 +37,12 @@ namespace CycleRoutesCore.Domain.Repositories
             return user;
         }
 
-        public async Task Update(User user)
+        public async Task EditInfo(User user)
         {
             User existingUser = await _db.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
-            _db.Entry(existingUser).CurrentValues.SetValues(user);
+            existingUser.Phone = user.Phone;
+            existingUser.About = user.About;
+            existingUser.CurrentCity = user.CurrentCity;
             await _db.SaveChangesAsync();
         }
 
@@ -54,7 +56,7 @@ namespace CycleRoutesCore.Domain.Repositories
         {
             var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId);
             user.LikesCount = await _db.Likes.Where(x => x.UserId == user.Id).CountAsync();
-            user.RoutesCount = await _db.Routes.Where(x => x.User.Id == user.Id).CountAsync();
+            user.RoutesCount = await _db.Routes.Where(x => x.User.Id == user.Id && !x.IsDeleted).CountAsync();
             return user;
         }
 

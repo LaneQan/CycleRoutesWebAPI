@@ -14,5 +14,7 @@ namespace CycleRoutesCore.Domain.Interfaces
         Task UploadImage(string imgUrl, int userId);
 
         Task DeleteImage(int userId);
+
+        Task EditInfo(User user);
     }
 }
